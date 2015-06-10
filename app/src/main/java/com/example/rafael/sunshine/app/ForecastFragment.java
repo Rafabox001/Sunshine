@@ -127,7 +127,12 @@ public class ForecastFragment extends Fragment {
 
 
             if (convertView == null) {
-                resource = R.layout.list_item_forecast;
+                if (position == 0){
+                    resource = R.layout.list_header_forecast;
+                }else{
+                    resource = R.layout.list_item_forecast;
+                }
+
                 convertView = inflater.inflate(resource, parent, false);
                 holder = new ViewHolder(convertView);
 
@@ -165,7 +170,7 @@ public class ForecastFragment extends Fragment {
             String tempP = token.nextToken();
             String tempM = token.nextToken();
             if (position == 0){
-                date.setText("Today");
+                date.setText("Today, " + d2);
             }else if (position == 1){
                 date.setText("Tomorrow");
             }else{
@@ -173,7 +178,11 @@ public class ForecastFragment extends Fragment {
             }
             switch (des){
                 case "Clear":
-                    weatherImage.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_clear));
+                    if (position == 0){
+                        weatherImage.setBackground(getActivity().getResources().getDrawable(R.drawable.art_clear));
+                    }else {
+                        weatherImage.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_clear));
+                    }
                     break;
                 case "Rain":
                     weatherImage.setBackground(getActivity().getResources().getDrawable(R.drawable.ic_rain));
@@ -183,8 +192,8 @@ public class ForecastFragment extends Fragment {
                     break;
             }
             desc.setText(des);
-            maxTemp.setText(tempP);
-            minTemp.setText(tempM);
+            maxTemp.setText(tempP + (char) 0x00B0);
+            minTemp.setText(tempM + (char) 0x00B0);
 
 
         }

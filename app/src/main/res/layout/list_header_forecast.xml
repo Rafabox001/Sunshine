@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/app">
+
+    <RelativeLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:gravity="center_horizontal|center_vertical">
+
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="22sp"
+            android:textColor="@color/white_text"
+            android:id="@+id/list_item_forecast_date"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="72sp"
+            android:textColor="@color/white_text"
+            android:id="@+id/list_item_forecast_tempMax"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textSize="36sp"
+            android:textColor="@color/white_text"
+            android:id="@+id/list_item_forecast_tempMin"/>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:id="@+id/weatherImage"
+            android:background="@drawable/art_clear"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:gravity="center"
+            android:textSize="22sp"
+            android:textColor="@color/white_text"
+            android:id="@+id/list_item_forecast_desc"/>
+
+    </LinearLayout>
+
+</LinearLayout>
