@@ -3,6 +3,8 @@ package com.example.rafael.sunshine.app;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,7 +23,10 @@ import java.util.StringTokenizer;
  */
 public class DetailActivityFragment extends Fragment {
 
-    private String forecast;
+    private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
+    private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
+    private String mForecastStr;
+
     private int position;
 
     private TextView date;
@@ -35,6 +40,7 @@ public class DetailActivityFragment extends Fragment {
     private ImageView weatherImage;
 
     public DetailActivityFragment() {
+        setHasOptionsMenu(true);
     }
 
 
@@ -47,9 +53,9 @@ public class DetailActivityFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         Bundle extra = intent.getExtras();
 
-        forecast = intent.getStringExtra(Intent.EXTRA_TEXT);
+        mForecastStr = intent.getStringExtra(Intent.EXTRA_TEXT);
         position = extra.getInt("position");
-        Log.v("forecast", forecast);
+        Log.v("forecast", mForecastStr);
 
         date = (TextView)rootView.findViewById(R.id.list_item_forecast_date);
         date2 = (TextView)rootView.findViewById(R.id.list_item_forecast_date2);
@@ -61,7 +67,7 @@ public class DetailActivityFragment extends Fragment {
         wind =(TextView)rootView.findViewById(R.id.wind);
         weatherImage = (ImageView)rootView.findViewById(R.id.weatherImage);
 
-        StringTokenizer token = new StringTokenizer(forecast, "/");
+        StringTokenizer token = new StringTokenizer(mForecastStr, "/");
         String d1 = token.nextToken();
         String d2 = token.nextToken();
         String des = token.nextToken();
@@ -110,5 +116,35 @@ public class DetailActivityFragment extends Fragment {
         wind.setText("Wind: " + speed + " km/h NW");
 
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.detailfragment, menu);
+
+        // Retrieve the share menu item
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+
+        // Get the provider and hold onto it to set/change the share intent.
+        ShareActionProvider mShareActionProvider =
+                (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+
+        // Attach an intent to this ShareActionProvider.  You can update this at any time,
+        // like when the user selects a new piece of data they might like to share.
+        if (mShareActionProvider != null ) {
+            mShareActionProvider.setShareIntent(createShareForecastIntent());
+        } else {
+            Log.d(LOG_TAG, "Share Action Provider is null?");
+        }
+    }
+
+    private Intent createShareForecastIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT,
+                mForecastStr + FORECAST_SHARE_HASHTAG);
+        return shareIntent;
     }
 }
