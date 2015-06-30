@@ -1,28 +1,9 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/weather_detail_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:minHeight="?attr/actionBarSize"
-        android:background="@color/app"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_logo"
-            android:id="@+id/toolbar_image" />
-    </android.support.v7.widget.Toolbar>
-
-    <fragment android:id="@+id/fragment"
-        android:name="com.example.rafael.sunshine.app.DetailActivityFragment"
-        android:layout_below="@id/toolbar"
-        tools:layout="@layout/fragment_detail" android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-</RelativeLayout>
+    android:layout_height="match_parent"
+    tools:context="com.example.android.sunshine.app.DetailActivity"
+    tools:ignore="MergeRootFrame" />
 
 

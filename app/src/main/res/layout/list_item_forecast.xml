@@ -2,73 +2,67 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:gravity="center_vertical"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:orientation="horizontal"
+    android:background="@drawable/touch_selector">
 
 
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:gravity="center_horizontal|center_vertical">
-
+        android:layout_height="wrap_content">
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:id="@+id/weatherImage"
-            android:background="@drawable/ic_clear"/>
+            android:id="@+id/list_item_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
 
-    </RelativeLayout>
+
 
     <LinearLayout
-        android:layout_width="175dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_weight="7"
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/list_item_date_textview"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="22sp"
-            android:id="@+id/list_item_forecast_date"/>
+            android:fontFamily="sans-serif-condensed"
+            android:textAppearance="?android:textAppearanceLarge"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/list_item_forecast_textview"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall"
-            android:textSize="14sp"
-            android:id="@+id/list_item_forecast_desc"/>
+            android:fontFamily="sans-serif-condensed"
+            android:textAppearance="?android:textAppearanceSmall"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="125dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
+        android:layout_weight="5"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/list_item_high_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="22sp"
-            android:id="@+id/list_item_forecast_tempMax"/>
+            android:fontFamily="sans-serif-condensed"
+            android:textAppearance="?android:textAppearanceLarge"/>
 
         <TextView
+            android:id="@+id/list_item_low_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall"
-            android:textSize="14sp"
-            android:id="@+id/list_item_forecast_tempMin"/>
+            android:fontFamily="sans-serif-condensed"
+            android:textAppearance="?android:textAppearanceSmall"/>
 
     </LinearLayout>
-
-
-
-
-
 
 </LinearLayout>
 
