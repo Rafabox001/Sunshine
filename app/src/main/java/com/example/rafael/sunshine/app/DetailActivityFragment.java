@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.example.rafael.sunshine.app.data.WeatherContract;
 import com.example.rafael.sunshine.app.data.WeatherContract.WeatherEntry;
+import com.example.rafael.sunshine.app.views.Compass;
 
 import java.util.StringTokenizer;
 
@@ -81,6 +82,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     private TextView mHumidityView;
     private TextView mWindView;
     private TextView mPressureView;
+    private Compass mCompass;
 
     public DetailActivityFragment() {
         setHasOptionsMenu(true);
@@ -106,6 +108,8 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         mHumidityView = (TextView) rootView.findViewById(R.id.detail_humidity_textview);
         mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
+
+        mCompass = (Compass) rootView.findViewById(R.id.compass);
 
         return rootView;
     }
@@ -169,6 +173,9 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
             // Read description from cursor and update view
             String description = data.getString(COL_WEATHER_DESC);
             mDescriptionView.setText(description);
+
+            // For accessibility, add a content description to the icon field
+            mIconView.setContentDescription(description);
 
             // Read high temperature from cursor and update view
             boolean isMetric = Utility.isMetric(getActivity());

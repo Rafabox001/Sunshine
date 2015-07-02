@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,15 +36,15 @@ public class Utility {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(context.getString(R.string.pref_units_key),
                 context.getString(R.string.pref_units_metric))
-                .equals(context.getString(R.string.pref_units_metric));
+                .equals("1");
     }
 
     static String formatTemperature(Context context, double temperature, boolean isMetric) {
         double temp;
-        if ( !isMetric ) {
-            temp = 9*temperature/5+32;
-        } else {
+        if ( isMetric ) {
             temp = temperature;
+        } else {
+            temp = 9*temperature/5+32;
         }
         return context.getString(R.string.format_temperature, temp);
     }

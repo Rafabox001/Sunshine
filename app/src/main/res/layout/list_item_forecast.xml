@@ -15,7 +15,8 @@
         <ImageView
             android:id="@+id/list_item_icon"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
     </FrameLayout>
 
 
@@ -46,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_width="0dp"
         android:layout_weight="5"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <TextView
