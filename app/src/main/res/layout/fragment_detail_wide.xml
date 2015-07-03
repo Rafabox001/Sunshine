@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Master layout. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -104,6 +105,12 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray"
                 android:textAppearance="?android:textAppearanceLarge"/>
+
+            <view class="com.example.rafael.sunshine.app.views.Compass"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:id="@+id/compass"
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

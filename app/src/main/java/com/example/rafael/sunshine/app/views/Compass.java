@@ -1,6 +1,8 @@
 package com.example.rafael.sunshine.app.views;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,6 +23,10 @@ public class Compass extends View {
     private Paint circle = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint line = new Paint(Paint.ANTI_ALIAS_FLAG);
     private boolean firstDraw;
+    private int mExternal = getResources().getColor(R.color.sunshine_blue);
+    private int mInternal = Color.WHITE;
+    private int mDirectional = Color.RED;
+    private int mText = Color.BLACK;
 
     public Compass(Context context) {
         super(context);
@@ -31,6 +37,16 @@ public class Compass extends View {
     public Compass(Context context, AttributeSet attrs) {
         super(context, attrs);
     // TODO Auto-generated constructor stub
+        TypedArray values = context.getTheme().obtainStyledAttributes(attrs, R.styleable.Compass, 0,0);
+        try{
+            direction = values.getInteger(R.styleable.Compass_labelDirection, 0);
+            mExternal = values.getColor(R.styleable.Compass_extColor, getResources().getColor(R.color.sunshine_blue));
+            mInternal = values.getColor(R.styleable.Compass_innerColor, Color.WHITE);
+            mDirectional = values.getColor(R.styleable.Compass_directionColor, Color.RED);
+            mText = values.getColor(R.styleable.Compass_textColor, Color.BLACK);
+        }finally {
+            values.recycle();
+        }
         init();
     }
 
@@ -44,22 +60,22 @@ public class Compass extends View {
 
         paintRect.setStyle(Paint.Style.FILL_AND_STROKE);
         paintRect.setStrokeWidth(3);
-        paintRect.setColor(getResources().getColor(R.color.sunshine_blue));
+        paintRect.setColor(mExternal);
         paintRect.setTextSize(30);
 
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(3);
-        paint.setColor(Color.BLACK);
+        paint.setColor(mText);
         paint.setTextSize(30);
 
         line.setStyle(Paint.Style.STROKE);
         line.setStrokeWidth(5);
-        line.setColor(Color.RED);
+        line.setColor(mDirectional);
         line.setTextSize(30);
 
         circle.setStyle(Paint.Style.FILL);
         circle.setStrokeWidth(1);
-        circle.setColor(Color.WHITE);
+        circle.setColor(mInternal);
         circle.setTextSize(30);
 
 
@@ -98,11 +114,11 @@ public class Compass extends View {
         canvas.drawText("E", cxCompass + radiusCompass, cyCompass, paint);
         canvas.drawText("W", cxCompass - extCompass , cyCompass, paint);
 
-        if(firstDraw){
+        if(!firstDraw){
 
             canvas.drawLine(cxCompass, cyCompass,
-                    (float)(cxCompass + radiusCompass * Math.sin((double)(-direction) * 3.14/180)),
-                    (float)(cyCompass - radiusCompass * Math.cos((double)(-direction) * 3.14/180)),
+                    (float)(cxCompass + radiusCompass * Math.sin((double)(+direction) * 3.14/180)),
+                    (float)(cyCompass - radiusCompass * Math.cos((double)(+direction) * 3.14/180)),
                     line);
 
             canvas.drawText(directionString, cxCompass, cyCompass, paint);
@@ -114,6 +130,24 @@ public class Compass extends View {
     {
         firstDraw = false;
         direction = dir;
+        //Determine de direction of the wind with the degrees
+        if (dir >= 337.5 || dir < 22.5) {
+            directionString = "N";
+        } else if (dir >= 22.5 && dir < 67.5) {
+            directionString = "NE";
+        } else if (dir >= 67.5 && dir < 112.5) {
+            directionString = "E";
+        } else if (dir >= 112.5 && dir < 157.5) {
+            directionString = "SE";
+        } else if (dir >= 157.5 && dir < 202.5) {
+            directionString = "S";
+        } else if (dir >= 202.5 && dir < 247.5) {
+            directionString = "SW";
+        } else if (dir >= 247.5 && dir < 292.5) {
+            directionString = "W";
+        } else if (dir >= 292.5 && dir < 337.5) {
+            directionString = "NW";
+        }
         invalidate();
     }
 }
