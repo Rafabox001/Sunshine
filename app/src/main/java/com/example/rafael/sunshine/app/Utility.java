@@ -17,13 +17,18 @@ package com.example.rafael.sunshine.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.example.rafael.sunshine.app.sync.SunshineSyncAdapter;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Utility {
     public static String getPreferredLocation(Context context) {
@@ -39,14 +44,16 @@ public class Utility {
                 .equals("1");
     }
 
-    static String formatTemperature(Context context, double temperature, boolean isMetric) {
-        double temp;
-        if ( isMetric ) {
-            temp = temperature;
-        } else {
-            temp = 9*temperature/5+32;
+    public static String formatTemperature(Context context, double temperature) {
+        // Data stored in Celsius by default.  If user prefers to see in Fahrenheit, convert
+        // the values here.
+        String suffix = "\u00B0";
+        if (!isMetric(context)) {
+            temperature = (temperature * 1.8) + 32;
         }
-        return context.getString(R.string.format_temperature, temp);
+
+        // For presentation, assume the user doesn't care about tenths of a degree.
+        return String.format(context.getString(R.string.format_temperature), temperature);
     }
 
     static String formatDate(long dateInMillis) {
@@ -245,4 +252,112 @@ public class Utility {
         }
         return -1;
     }
+    /** Returns true if the network is available or about to become available.
+     *
+     * @param c Context used to get the ConnectivityManager
+     * @return
+     */
+    static public boolean isNetworkAvailable(Context c){
+        ConnectivityManager cm = (ConnectivityManager)c.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork !=null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    /**
+     *
+     * @param c Context used to get the SharedPreferences
+     * @return the location status integer type
+     */
+    @SuppressWarnings("ResourceType")
+    static public @SunshineSyncAdapter.LocationStatus int getLocationStatus(Context c){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        return sp.getInt(c.getString(R.string.pref_location_status_key),
+                SunshineSyncAdapter.LOCATION_STATUS_UNKNOWN);
+    }
+
+    /**
+     * Resets the location status. (Sets it to SunshineSyncAdapter.LOCATION_STATUS_UNKNOWN)
+     * @param c Context used to get SharedPreferences
+     */
+    static public void resetLocationStatus(Context c){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putInt(c.getString(R.string.pref_location_status_key), SunshineSyncAdapter.LOCATION_STATUS_UNKNOWN);
+        spe.apply();
+    }
+
+    /**
+     * Helper method to provide the art urls according to the weather condition id returned
+     * by the OpenWeatherMap call.
+     *
+     * @param context Context to use for retrieving the URL format
+     * @param weatherId from OpenWeatherMap API response
+     * @return url for the corresponding weather artwork. null if no relation is found.
+     */
+    public static String getArtUrlForWeatherCondition(Context context, int weatherId) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String formatArtUrl = prefs.getString(context.getString(R.string.pref_art_pack_key),
+                context.getString(R.string.pref_art_pack_sunshine));
+
+        // Based on weather code data found at:
+        // http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
+        if (weatherId >= 200 && weatherId <= 232) {
+            return String.format(Locale.US, formatArtUrl, "storm");
+        } else if (weatherId >= 300 && weatherId <= 321) {
+            return String.format(Locale.US, formatArtUrl, "light_rain");
+        } else if (weatherId >= 500 && weatherId <= 504) {
+            return String.format(Locale.US, formatArtUrl, "rain");
+        } else if (weatherId == 511) {
+            return String.format(Locale.US, formatArtUrl, "snow");
+        } else if (weatherId >= 520 && weatherId <= 531) {
+            return String.format(Locale.US, formatArtUrl, "rain");
+        } else if (weatherId >= 600 && weatherId <= 622) {
+            return String.format(Locale.US, formatArtUrl, "snow");
+        } else if (weatherId >= 701 && weatherId <= 761) {
+            return String.format(Locale.US, formatArtUrl, "fog");
+        } else if (weatherId == 761 || weatherId == 781) {
+            return String.format(Locale.US, formatArtUrl, "storm");
+        } else if (weatherId == 800) {
+            return String.format(Locale.US, formatArtUrl, "clear");
+        } else if (weatherId == 801) {
+            return String.format(Locale.US, formatArtUrl, "light_clouds");
+        } else if (weatherId >= 802 && weatherId <= 804) {
+            return String.format(Locale.US, formatArtUrl, "clouds");
+        }
+        return null;
+    }
+
+    /**
+     * Helper method to convert the database representation of the date into something to display
+     * to users.  As classy and polished a user experience as "20140102" is, we can do better.
+     *
+     * @param context Context to use for resource localization
+     * @param dateInMillis The date in milliseconds
+     * @return a user-friendly representation of the date.
+     */
+    public static String getFullFriendlyDayString(Context context, long dateInMillis) {
+
+        String day = getDayName(context, dateInMillis);
+        int formatId = R.string.format_full_friendly_date;
+        return String.format(context.getString(
+                formatId,
+                day,
+                getFormattedMonthDay(context, dateInMillis)));
+    }
+
+    /**
+     * Helper method to return whether or not Sunshine is using local graphics.
+     *
+     * @param context Context to use for retrieving the preference
+     * @return true if Sunshine is using local graphics, false otherwise.
+     */
+    public static boolean usingLocalGraphics(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String sunshineArtPack = context.getString(R.string.pref_art_pack_sunshine);
+        return prefs.getString(context.getString(R.string.pref_art_pack_key),
+                sunshineArtPack).equals(sunshineArtPack);
+    }
+
+
 }

@@ -23,7 +23,7 @@ public class Compass extends View {
     private Paint circle = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint line = new Paint(Paint.ANTI_ALIAS_FLAG);
     private boolean firstDraw;
-    private int mExternal = getResources().getColor(R.color.sunshine_blue);
+    private int mExternal = getResources().getColor(R.color.primary);
     private int mInternal = Color.WHITE;
     private int mDirectional = Color.RED;
     private int mText = Color.BLACK;
@@ -40,7 +40,7 @@ public class Compass extends View {
         TypedArray values = context.getTheme().obtainStyledAttributes(attrs, R.styleable.Compass, 0,0);
         try{
             direction = values.getInteger(R.styleable.Compass_labelDirection, 0);
-            mExternal = values.getColor(R.styleable.Compass_extColor, getResources().getColor(R.color.sunshine_blue));
+            mExternal = values.getColor(R.styleable.Compass_extColor, getResources().getColor(R.color.primary));
             mInternal = values.getColor(R.styleable.Compass_innerColor, Color.WHITE);
             mDirectional = values.getColor(R.styleable.Compass_directionColor, Color.RED);
             mText = values.getColor(R.styleable.Compass_textColor, Color.BLACK);

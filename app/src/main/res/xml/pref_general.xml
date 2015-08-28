@@ -1,15 +1,16 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/com.example.rafael.sunshine.app">
 
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
-    <EditTextPreference
+    <com.example.rafael.sunshine.app.views.LocationEditTextPreference
         android:key="@string/pref_location_key"
         android:title="@string/pref_location_label"
         android:defaultValue="@string/pref_location_default"
         android:selectAllOnFocus="true"
-        android:inputType="number"
+        android:inputType="text"
         android:singleLine="true"
-        android:maxLines="1" />
+        custom:minLength="3" />
 
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
          dismiss it. -->
@@ -22,5 +23,19 @@
         android:entryValues="@array/pref_units_list_values"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null" />
+
+    <ListPreference
+        android:title="@string/pref_art_pack_label"
+        android:key="@string/pref_art_pack_key"
+        android:defaultValue="@string/pref_art_pack_sunshine"
+        android:entryValues="@array/pref_art_pack_values"
+        android:entries="@array/pref_art_pack_options" />
+
+    <CheckBoxPreference
+        android:title="@string/pref_enable_notifications_label"
+        android:key="@string/pref_enable_notifications_key"
+        android:summaryOff="@string/pref_enable_notifications_false"
+        android:summaryOn="@string/pref_enable_notifications_true"
+        android:defaultValue="@string/pref_enable_notifications_default" />
 
 </PreferenceScreen>

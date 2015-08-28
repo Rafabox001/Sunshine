@@ -16,4 +16,7 @@
         <attr name="directionColor" format="reference"/>
         <attr name="textColor" format="reference"/>
     </declare-styleable>
+    <declare-styleable name="LocationEditTextPreference">
+        <attr name="minLength" format="integer"/>
+    </declare-styleable>
 </resources>
