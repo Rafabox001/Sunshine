@@ -117,7 +117,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
         mPressureLabelView = (TextView) rootView.findViewById(R.id.detail_pressure_label_textview);
 
-        mCompass = (Compass) rootView.findViewById(R.id.compass);
+        //mCompass = (Compass) rootView.findViewById(R.id.compass);
 
         return rootView;
     }
@@ -223,8 +223,8 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
             mWindView.setContentDescription(getString(R.string.a11y_wind, mWindView.getText()));
             mWindLabelView.setContentDescription(mWindView.getContentDescription());
 
-            mCompass.updateDirection(windDirStr);
-            mCompass.setVisibility(View.VISIBLE);
+            //mCompass.updateDirection(windDirStr);
+            //mCompass.setVisibility(View.VISIBLE);
 
 
             // Read pressure from cursor and update view
