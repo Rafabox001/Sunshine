@@ -9,11 +9,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -30,8 +33,6 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.rafael.sunshine.app.data.WeatherContract;
@@ -51,6 +52,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private int mPosition = RecyclerView.NO_POSITION;
     private boolean mUseTodayLayout, mAutoSelectView;
     private int mChoiceMode;
+    private boolean mHoldForTransition;
 
     private AnimationSet set;
     private LayoutAnimationController controller;
@@ -98,7 +100,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         /**
          * DetailFragmentCallback for when an item has been selected.
          */
-        public void onItemSelected(Uri dateUri);
+        public void onItemSelected(Uri dateUri, ForecastAdapter.ForecastAdapterViewHolder vh);
     }
 
     public ForecastFragment() {
@@ -136,6 +138,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 0, 0);
         mChoiceMode = a.getInt(R.styleable.ForecastFragment_android_choiceMode, AbsListView.CHOICE_MODE_NONE);
         mAutoSelectView = a.getBoolean(R.styleable.ForecastFragment_autoSelectView, false);
+        mHoldForTransition = a.getBoolean(R.styleable.ForecastFragment_sharedElementTransitions, false);
         a.recycle();
     }
 
@@ -170,7 +173,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 String locationSetting = Utility.getPreferredLocation(getActivity());
                 ((Callback) getActivity())
                         .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                                locationSetting, date)
+                                locationSetting, date),
+                                vh
                         );
                 mPosition = vh.getAdapterPosition();
             }
@@ -199,6 +203,23 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             }
         }
 
+        final AppBarLayout appbarView = (AppBarLayout)rootView.findViewById(R.id.appbar);
+        if (null != appbarView) {
+            ViewCompat.setElevation(appbarView, 0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        if (0 == mRecyclerView.computeVerticalScrollOffset()) {
+                            appbarView.setElevation(0);
+                        } else {
+                            appbarView.setElevation(appbarView.getTargetElevation());
+                        }
+                    }
+                });
+            }
+        }
         // If there's instance state, mine it for useful information.
         // The end-goal here is that the user never knows that turning their device sideways
         // does crazy lifecycle related things.  It should feel like some stuff stretched out,
@@ -220,6 +241,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        // We hold for transition here just in-case the activity
+        // needs to be re-created. In a standard return transition,
+        // this doesn't actually make a difference.
+        if ( mHoldForTransition ) {
+            getActivity().supportPostponeEnterTransition();
+        }
         getLoaderManager().initLoader(FORECAST_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
@@ -306,7 +333,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         }
         updateEmptyView();
 
-        if ( data.getCount() > 0 ) {
+        if ( data.getCount() == 0 ) {
+            getActivity().supportStartPostponedEnterTransition();
+        } else {
             mRecyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
@@ -319,6 +348,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                         RecyclerView.ViewHolder vh = mRecyclerView.findViewHolderForAdapterPosition(itemPosition);
                         if ( null != vh && mAutoSelectView ) {
                             mForecastAdapter.selectView( vh );
+                        }
+                        if ( mHoldForTransition ) {
+                            getActivity().supportStartPostponedEnterTransition();
                         }
                         return true;
                     }

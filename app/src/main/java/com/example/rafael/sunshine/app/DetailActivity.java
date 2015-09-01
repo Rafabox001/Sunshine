@@ -1,7 +1,7 @@
 package com.example.rafael.sunshine.app;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +22,7 @@ public class DetailActivity extends AppCompatActivity {
 
             Bundle arguments = new Bundle();
             arguments.putParcelable(DetailActivityFragment.DETAIL_URI, getIntent().getData());
+            arguments.putBoolean(DetailActivityFragment.DETAIL_TRANSITION_ANIMATION, true);
 
             DetailActivityFragment fragment = new DetailActivityFragment();
             fragment.setArguments(arguments);
@@ -29,6 +30,9 @@ public class DetailActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.weather_detail_container, fragment)
                     .commit();
+
+            // Being here means we are in animation mode
+            supportPostponeEnterTransition();
         }
     }
 

@@ -187,6 +187,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
                     .into(forecastAdapterViewHolder.mIconView);
         }
 
+        // this enables better animations. even if we lose state due to a device rotation,
+        // the animator can use this to re-find the original view
+        ViewCompat.setTransitionName(forecastAdapterViewHolder.mIconView, "iconView" + position);
+
         // Use viewHolder to populate date field
         long dateInMillis = mCursor.getLong(ForecastFragment.COL_WEATHER_DATE);
 
