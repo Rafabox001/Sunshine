@@ -73,6 +73,15 @@
 		app:layout_gravity="fill"
 		tools:text="4km/h NW"/>
 
+    <view class="com.example.rafael.sunshine.app.views.Compass"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:id="@+id/compass"
+        app:layout_gravity="center"
+        app:layout_columnSpan="2"
+        app:layout_rowWeight="1" />
+
 
 
 </android.support.v7.widget.GridLayout>

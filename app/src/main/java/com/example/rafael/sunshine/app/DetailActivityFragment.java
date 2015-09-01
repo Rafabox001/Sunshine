@@ -10,6 +10,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -117,7 +119,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
         mPressureLabelView = (TextView) rootView.findViewById(R.id.detail_pressure_label_textview);
 
-        //mCompass = (Compass) rootView.findViewById(R.id.compass);
+        mCompass = (Compass) rootView.findViewById(R.id.compass);
 
         return rootView;
     }
@@ -157,15 +159,20 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
                     null
             );
         }
-        getView().setVisibility(View.INVISIBLE);
-
+        ViewParent vp = getView().getParent();
+        if ( vp instanceof CardView ) {
+            ((View)vp).setVisibility(View.INVISIBLE);
+        }
         return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
-            getView().setVisibility(View.VISIBLE);
+            ViewParent vp = getView().getParent();
+            if ( vp instanceof CardView ) {
+                ((View)vp).setVisibility(View.VISIBLE);
+            }
             // Read weather condition ID from cursor
             int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
 
@@ -223,8 +230,8 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
             mWindView.setContentDescription(getString(R.string.a11y_wind, mWindView.getText()));
             mWindLabelView.setContentDescription(mWindView.getContentDescription());
 
-            //mCompass.updateDirection(windDirStr);
-            //mCompass.setVisibility(View.VISIBLE);
+            mCompass.updateDirection(windDirStr);
+            mCompass.setVisibility(View.VISIBLE);
 
 
             // Read pressure from cursor and update view
