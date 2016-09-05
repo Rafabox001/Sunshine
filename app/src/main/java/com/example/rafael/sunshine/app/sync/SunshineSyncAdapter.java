@@ -125,7 +125,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                     .appendQueryParameter(FORMAT_PARAM, format)
                     .appendQueryParameter(UNITS_PARAM, units)
                     .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
-                    .appendQueryParameter(APPID_PARAM, "159e354162f7d16978570842ea34ec01")
+                    .appendQueryParameter(APPID_PARAM, getContext().getResources().getString(R.string.my_api_key))
                     .build();
 
             URL url = new URL(builtUri.toString());

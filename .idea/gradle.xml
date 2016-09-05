@@ -10,7 +10,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/sunshinewatchface" />
             <option value="$PROJECT_DIR$/watchface" />
           </set>
         </option>
@@ -18,7 +17,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/sunshinewatchface" />
             <option value="$PROJECT_DIR$/watchface" />
           </set>
         </option>

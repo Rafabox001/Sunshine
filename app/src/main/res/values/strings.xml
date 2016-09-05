@@ -175,4 +175,7 @@
     <!-- Strings related to Muzei Source -->
     <string name="muzei_description">Today\'s weather</string>
 
+    <!-- APP ID Key -->
+    <string name="my_api_key">My Api Key</string>
+
 </resources>
